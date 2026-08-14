@@ -24,3 +24,9 @@ git push
 ## Projetos específicos
 
 Este repositório guarda apenas as orientações **gerais**. Projetos individuais devem ter seu próprio repositório no GitHub, cada um com seu próprio `CLAUDE.md` local complementando este (ver seção 12 do documento).
+
+## Projetos relacionados
+
+- [dashboard-verba-clientes](https://github.com/oivanfelipe/dashboard-verba-clientes) —
+  acompanhamento de verba e investimento em Meta Ads e Google Ads por cliente.
+  Nasceu aqui e foi movido para repositório próprio com o histórico preservado.
