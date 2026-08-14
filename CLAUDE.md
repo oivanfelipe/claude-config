@@ -54,6 +54,73 @@ Quando a solicitação estiver clara e for de baixo risco, tenha autonomia para 
 
 Quando existir risco relevante, ambiguidade real ou uma decisão estratégica importante, pare e peça confirmação.
 
+## Consulte as skills antes de executar
+
+Existem dezenas de skills instaladas. Várias resolvem tarefas que, sem elas, seriam improvisadas com método pior.
+
+Antes de começar uma tarefa, verifique na lista de skills disponíveis se alguma cobre o que foi pedido.
+
+Se cobrir, carregue-a. Ela já traz o método, o formato de saída e os erros conhecidos daquele tipo de entrega.
+
+Faça essa verificação quando a tarefa for:
+
+- produzir um artefato — documento, deck, planilha, PDF, página, gráfico, relatório, análise, plano;
+- operar um fluxo — deploy, release, revisão, auditoria, pesquisa;
+- usar vocabulário de domínio — marketing, SEO, tráfego pago, funil, branding.
+
+Não faça quando for pergunta direta, leitura de arquivo, comando único ou conversa. Nesses casos a verificação apenas atrasa a resposta sem mudar o resultado.
+
+### Como decidir se a skill cobre
+
+A skill cobre quando o tipo de entrega bate, mesmo que o assunto seja outro.
+
+Na dúvida entre duas, prefira a mais específica. A específica normalmente já usa a genérica por dentro.
+
+Skills se combinam. O caso normal é duas: uma define **o que** entregar, outra define **como deve parecer**. Carregue as duas antes de começar, não uma no meio da peça.
+
+### Roteamento por tipo de tarefa
+
+| A tarefa é | Use |
+|---|---|
+| Qualquer peça com a marca V4 / Carvalho & Co | `identidade-visual-v4` **sempre**, combinada com a de baixo |
+| Deck executivo, slides, PPTX | `criar-apresentacao` |
+| Deck mensal de tráfego, pitch de campanha, GO/NO-GO | `monthly-traffic-deck` |
+| Diagnóstico de cliente ou prospect, auditoria de aquisição | `doutor-carvalho` |
+| Auditoria de funil, gargalo, throughput, projeção de ganho | `argus` |
+| Auditoria de SEO/AIO/SEO local com metodologia própria | `scope-auditor` |
+| Planejamento estratégico de marketing | `planejamento-estrategico-v4` |
+| Briefing de cliente para alimentar o planejamento | `briefing-cliente-v4` |
+| Documento Word, relatório, proposta escrita | `docx` |
+| Planilha, dados tabulares, CSV | `xlsx` |
+| PDF: ler, gerar, combinar, extrair | `pdf` |
+| Gráfico, dashboard, visualização de dados | `dataviz` |
+| Página publicada, artefato visual para compartilhar | `artifact-design` |
+| Auditoria técnica de SEO | `seo-audit` |
+| Otimização de conversão de página ou formulário | `cro` |
+| Copy de página, headline, proposta de valor | `copywriting` |
+| Criativo de anúncio em volume, variações | `ad-creative` |
+| Estratégia de campanha paga, segmentação, verba | `ads` |
+| Tracking, GA4, eventos, atribuição | `analytics` |
+| Dados estruturados, JSON-LD, rich results | `schema` |
+| Otimização para busca por IA, citação em LLM | `ai-seo` |
+| Revisão de código em busca de bug | `code-review` |
+| Limpeza de código já escrito, simplificação | `simplify` |
+| Plano de implementação faseado | `make-plan`, depois `do` |
+| Entender codebase novo | `learn-codebase`, `smart-explore`, `pathfinder` |
+| Deploy na Vercel | `deploy-to-vercel` |
+| Automação de navegador | `agent-browser` |
+| Acompanhar PR até o merge | `babysit` |
+| Escrever ou melhorar um prompt | `prompt-optimizer` |
+| Tirar cara de texto gerado por IA | `humanizer` |
+| Configurar hooks, permissões, settings.json | `update-config` |
+| Dúvida sobre a API da Anthropic, modelos, preço | `claude-api` |
+
+Os nomes vêm de três origens: o repositório de skills globais (`~/.agents/skills`), a conta claude.ai e as skills embutidas do Claude Code. Nem toda sessão carrega as três.
+
+Vale a lista de skills disponíveis **daquela sessão**. Se um nome da tabela não estiver lá, siga sem ele, não o procure.
+
+Quando nenhuma skill cobrir, diga isso em uma linha e siga com o método direto. Não force uma skill que não serve apenas para ter usado alguma.
+
 ---
 
 # 3. CONTEXTO DE MARKETING
@@ -373,6 +440,35 @@ Não adicione elementos visuais sem função.
 Quando existir uma identidade visual definida, respeite-a.
 
 Não altere cores, tipografia, logotipo ou identidade visual importante sem necessidade ou autorização.
+
+## Identidade visual da V4 é o padrão
+
+Toda entrega em nome da V4 Company / Carvalho & Co usa a skill `identidade-visual-v4`.
+
+Isso vale para apresentação, deck, documento, proposta, relatório, diagnóstico, dashboard, gráfico e página web — em qualquer formato: PPTX, DOCX, PDF, HTML, React ou imagem.
+
+Carregue a skill antes de escrever a primeira linha da peça, não depois de montada. Ela define paleta, tipografia, grid, componentes e as regras de marca.
+
+Não é preciso o usuário pedir "identidade visual da V4". Se a entrega leva a marca da V4, o padrão é este.
+
+### A regra que resolve a maioria das dúvidas
+
+Peça de conteúdo — a que carrega dado, argumento ou instrução — vai em fundo branco `#FFFFFF`, com texto preto `#111111` e vermelho `#C00000` apenas como acento.
+
+O fundo escuro cinematográfico existe só em capa, separador de seção, encerramento e peça de impacto isolada.
+
+Nunca use texto preto sobre preenchimento vermelho: o contraste é 2,91:1 e reprova. Sobre o vermelho, o texto é branco.
+
+### Precedência
+
+Quando houver conflito, resolva nesta ordem:
+
+1. Instrução explícita do usuário na conversa. Vale só para aquela peça.
+2. Marca do cliente, quando a entrega é assinada pelo cliente e não pela V4. A paleta do cliente substitui o vermelho V4 como acento, mas a estrutura permanece: fundo branco, alinhamento rigoroso, um destaque por tela, conclusão por bloco.
+3. `identidade-visual-v4`.
+4. Qualquer paleta ou token definido dentro de outra skill.
+
+O item 4 existe porque `criar-apresentacao`, `monthly-traffic-deck`, `doutor-carvalho`, `argus` e `scope-auditor` trazem paletas próprias, herdadas de antes desta skill existir. Onde divergirem, `identidade-visual-v4` ganha — é a única versão validada contra WCAG.
 
 ---
 
