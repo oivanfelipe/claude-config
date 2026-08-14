@@ -1,0 +1,834 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Autoridade no Onboarding</title>
+<meta name="description" content="Diagnóstico do fluxo atual de onboarding de clientes e proposta de um novo desenho, com o coordenador à frente desde o primeiro contato.">
+<style>
+:root{
+  --ground:#FFFFFF;
+  --ink:#111111;
+  --accent:#C00000;
+  --dark:#0A0A0B;
+  --dark-2:#171718;
+  --surface:#F6F4F4;
+  --rule:#E2DDDD;
+  --muted:#6C6462;
+  --on-dark:#F2EFEF;
+  --on-dark-muted:#9C9492;
+
+  --display:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --body:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+
+  --pad:clamp(20px,5vw,64px);
+  --wide:1160px;
+  --prose:64ch;
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  margin:0;
+  background:var(--ground);
+  color:var(--ink);
+  font-family:var(--body);
+  font-size:clamp(16px,1.05vw,17.5px);
+  line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation-duration:.001ms!important;transition-duration:.001ms!important}
+}
+
+/* ---------- progress ---------- */
+.progress{
+  position:fixed;top:0;left:0;height:3px;width:100%;
+  transform:scaleX(0);transform-origin:0 50%;
+  background:var(--accent);z-index:99;
+}
+
+/* ---------- structure ---------- */
+.band{padding:clamp(64px,9vw,128px) var(--pad)}
+.band--dark{background:var(--dark);color:var(--on-dark)}
+.band--tint{background:var(--surface)}
+.inner{max-width:var(--wide);margin:0 auto}
+.prose{max-width:var(--prose)}
+
+.eyebrow{
+  font-family:var(--mono);
+  font-size:.72rem;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  color:var(--accent);
+  margin:0 0 18px;
+  display:flex;align-items:center;gap:12px;
+}
+.eyebrow::after{content:"";flex:1;height:1px;background:var(--rule);max-width:120px}
+.band--dark .eyebrow::after{background:#2E2E30}
+
+h1,h2,h3,h4{font-family:var(--display);text-wrap:balance;margin:0}
+h1{
+  font-size:clamp(2.4rem,6.4vw,5rem);
+  font-weight:900;line-height:.98;letter-spacing:-.035em;
+  text-transform:uppercase;
+}
+h2{
+  font-size:clamp(1.75rem,3.4vw,2.9rem);
+  font-weight:900;line-height:1.06;letter-spacing:-.028em;
+  margin-bottom:20px;
+}
+h3{font-size:clamp(1.05rem,1.5vw,1.25rem);font-weight:800;line-height:1.25;letter-spacing:-.01em}
+h4{font-size:.98rem;font-weight:800;line-height:1.3;letter-spacing:-.005em}
+p{margin:0 0 18px}
+p:last-child{margin-bottom:0}
+strong{font-weight:700}
+
+/* ---------- cover ---------- */
+.cover{
+  min-height:min(92vh,780px);
+  display:flex;flex-direction:column;justify-content:space-between;
+  gap:56px;
+}
+.cover__mark{
+  font-family:var(--mono);font-size:.72rem;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--on-dark-muted);
+}
+.cover__mark b{color:var(--on-dark);font-weight:600}
+.cover h1{max-width:16ch}
+.cover__lede{
+  font-size:clamp(1.05rem,1.6vw,1.3rem);
+  color:var(--on-dark-muted);max-width:52ch;margin-top:26px;
+}
+.cover__lede b{color:var(--on-dark);font-weight:600}
+.cover__meta{
+  display:flex;flex-wrap:wrap;gap:10px 28px;
+  font-family:var(--mono);font-size:.74rem;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--on-dark-muted);
+  border-top:1px solid #2E2E30;padding-top:20px;
+}
+.cover__meta span:last-child{color:var(--accent)}
+
+/* ---------- takeaway ---------- */
+.takeaway{
+  margin-top:36px;border-left:3px solid var(--accent);
+  padding:2px 0 2px 22px;
+  font-family:var(--display);font-weight:800;
+  font-size:clamp(1.1rem,1.9vw,1.5rem);
+  line-height:1.28;letter-spacing:-.018em;
+  max-width:34ch;
+}
+.band--dark .takeaway{border-color:var(--accent)}
+
+/* ---------- flow diagram ---------- */
+.flowhead{
+  display:flex;flex-wrap:wrap;align-items:baseline;
+  justify-content:space-between;gap:12px;margin-bottom:18px;
+}
+.legend{
+  font-family:var(--mono);font-size:.7rem;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--muted);
+}
+.flowwrap{overflow-x:auto;border:1px solid var(--rule);background:var(--ground)}
+.flow{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(148px,1fr);min-width:min-content}
+.step{display:flex;flex-direction:column}
+.step__body{
+  flex:1;padding:22px 18px 24px;
+  border-right:1px solid var(--rule);
+}
+.step:last-child .step__body{border-right:0}
+.stepno{
+  font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;
+  color:var(--accent);display:block;margin-bottom:10px;
+}
+.step h4{margin-bottom:8px}
+.step p{font-size:.86rem;line-height:1.5;color:var(--muted);margin:0}
+.step__front{
+  display:flex;align-items:center;gap:8px;
+  padding:11px 18px;min-height:46px;
+  font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;
+  text-transform:uppercase;
+}
+.front--none{background:var(--rule);color:var(--muted)}
+.front--sales{background:#2B2B2D;color:var(--on-dark)}
+.front--support{background:#6C6462;color:#FFFFFF}
+.front--coord{background:var(--accent);color:#FFFFFF}
+
+.flownote{
+  font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;
+  color:var(--muted);margin-top:12px;
+}
+@media (max-width:820px){
+  .flow{grid-auto-flow:row;grid-auto-columns:auto;min-width:0}
+  .flowwrap{overflow-x:visible}
+  .step__body{border-right:0;border-bottom:1px solid var(--rule)}
+  .step:last-child .step__body{border-bottom:1px solid var(--rule)}
+}
+
+/* ---------- cards ---------- */
+.cards{display:grid;gap:1px;background:var(--rule);border:1px solid var(--rule);margin-top:40px}
+.cards--3{grid-template-columns:repeat(3,1fr)}
+.cards--2{grid-template-columns:repeat(2,1fr)}
+.card{background:var(--ground);padding:30px 26px 32px}
+.card__no{
+  font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;
+  color:var(--accent);display:block;margin-bottom:14px;
+}
+.card h3{margin-bottom:10px}
+.card p{font-size:.92rem;color:var(--muted);margin:0}
+.band--tint .card{background:var(--ground)}
+@media (max-width:820px){.cards--3,.cards--2{grid-template-columns:1fr}}
+
+/* ---------- clients ---------- */
+.clients{display:flex;flex-wrap:wrap;gap:12px;margin:34px 0 0}
+.client{
+  border:1px solid var(--ink);padding:14px 22px;
+  font-family:var(--display);font-weight:800;letter-spacing:-.01em;
+  font-size:clamp(1rem,1.6vw,1.2rem);
+}
+.evidence{
+  display:grid;grid-template-columns:repeat(2,1fr);gap:1px;
+  background:var(--rule);border:1px solid var(--rule);margin-top:40px;
+}
+.evidence>div{background:var(--ground);padding:24px 26px}
+.evidence dt{
+  font-family:var(--mono);font-size:.7rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--accent);margin-bottom:10px;
+}
+.evidence dd{margin:0;font-size:.92rem;color:var(--muted)}
+@media (max-width:820px){.evidence{grid-template-columns:1fr}}
+
+/* ---------- table ---------- */
+.tablewrap{overflow-x:auto;margin-top:40px;border:1px solid var(--rule)}
+table{border-collapse:collapse;width:100%;min-width:660px;background:var(--ground)}
+th,td{text-align:left;padding:15px 18px;border-bottom:1px solid var(--rule);vertical-align:top}
+thead th{
+  font-family:var(--mono);font-size:.68rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--muted);font-weight:400;
+  background:var(--surface);
+}
+tbody tr:last-child td{border-bottom:0}
+td:first-child{font-weight:600;width:26%}
+.tag{
+  display:inline-block;font-family:var(--mono);font-size:.68rem;
+  letter-spacing:.06em;text-transform:uppercase;padding:3px 9px;
+  border:1px solid var(--rule);color:var(--muted);
+}
+.tag--lead{background:var(--accent);border-color:var(--accent);color:#FFFFFF}
+.tag--out{text-decoration:line-through;opacity:.7}
+
+/* ---------- form blocks ---------- */
+.blocks{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--rule);border:1px solid var(--rule);margin-top:40px}
+.block{background:var(--ground);padding:28px 26px 30px}
+.block h3{margin-bottom:14px;display:flex;align-items:baseline;gap:10px}
+.block h3 em{
+  font-family:var(--mono);font-style:normal;font-size:.72rem;
+  letter-spacing:.1em;color:var(--accent);
+}
+.block ul{margin:0;padding-left:18px;font-size:.9rem;color:var(--muted)}
+.block li{margin-bottom:7px}
+.block li:last-child{margin-bottom:0}
+.block li b{color:var(--ink);font-weight:600}
+@media (max-width:820px){.blocks{grid-template-columns:1fr}}
+
+/* ---------- timeline ---------- */
+.timeline{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;margin-top:44px;border-top:2px solid var(--ink)}
+.tl{padding:22px 20px 4px;border-right:1px solid var(--rule);position:relative}
+.tl:last-child{border-right:0}
+.tl::before{
+  content:"";position:absolute;top:-7px;left:0;
+  width:12px;height:12px;background:var(--accent);
+}
+.tl__when{
+  font-family:var(--mono);font-size:.74rem;letter-spacing:.1em;
+  color:var(--accent);display:block;margin-bottom:10px;
+}
+.tl h4{margin-bottom:6px}
+.tl p{font-size:.85rem;color:var(--muted);margin:0}
+@media (max-width:820px){
+  .timeline{grid-auto-flow:row;border-top:0}
+  .tl{border-right:0;border-left:2px solid var(--ink);padding:14px 0 18px 20px}
+  .tl::before{top:0;left:-7px}
+}
+
+/* ---------- phases ---------- */
+.phases{margin-top:40px;border-top:1px solid var(--rule)}
+.phase{
+  display:grid;grid-template-columns:130px 1fr 190px;gap:24px;
+  padding:24px 0;border-bottom:1px solid var(--rule);align-items:start;
+}
+.phase__when{
+  font-family:var(--mono);font-size:.74rem;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--accent);padding-top:2px;
+}
+.phase h4{margin-bottom:7px}
+.phase p{font-size:.9rem;color:var(--muted);margin:0}
+.phase__who{
+  font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;
+  text-transform:uppercase;color:var(--muted);padding-top:3px;
+}
+@media (max-width:820px){
+  .phase{grid-template-columns:1fr;gap:8px}
+  .phase__who{padding-top:4px}
+}
+
+/* ---------- ask ---------- */
+.ask{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:#2E2E30;border:1px solid #2E2E30;margin-top:44px}
+.ask>div{background:var(--dark-2);padding:28px 24px 30px}
+.ask__no{font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;color:var(--accent);display:block;margin-bottom:12px}
+.ask h3{margin-bottom:9px;color:var(--on-dark)}
+.ask p{font-size:.9rem;color:var(--on-dark-muted);margin:0}
+@media (max-width:820px){.ask{grid-template-columns:1fr}}
+
+/* ---------- reveal ---------- */
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease}
+.reveal.is-in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+
+<div class="progress" id="progress"></div>
+
+<!-- ============ CAPA ============ -->
+<header class="band band--dark">
+  <div class="inner cover">
+    <div class="cover__mark"><b>V4 Company</b> — Carvalho &amp; Co · Operações</div>
+    <div>
+      <p class="eyebrow">Onboarding de clientes</p>
+      <h1>Quem o cliente chama quando dá problema?</h1>
+      <p class="cover__lede">Hoje, não é o coordenador. <b>Diagnóstico do fluxo atual e proposta de um novo desenho de onboarding</b>, com o coordenador à frente desde o primeiro contato.</p>
+    </div>
+    <div class="cover__meta">
+      <span>Agosto de 2026</span>
+      <span>Público: liderança</span>
+      <span>Decisão: GO / NO-GO</span>
+    </div>
+  </div>
+</header>
+
+<!-- ============ A TESE ============ -->
+<section class="band">
+  <div class="inner reveal">
+    <p class="eyebrow">O ponto</p>
+    <div class="prose">
+      <h2>A autoridade se decide no primeiro contato, não no kickoff.</h2>
+      <p>Quem abre a relação com o stakeholder vira o canal padrão dele. É a pessoa que ele salva no celular, que ele chama quando algo trava, que ele cobra quando o resultado demora.</p>
+      <p>Hoje essa pessoa é a Julia — que é suporte e não responde pelo projeto. O coordenador, que responde pelo resultado, só aparece no kickoff, quando a relação já está formada com outra pessoa.</p>
+    </div>
+    <p class="takeaway">Não é um problema de pessoa. É um problema de ordem.</p>
+  </div>
+</section>
+
+<!-- ============ FLUXO ATUAL ============ -->
+<section class="band band--tint">
+  <div class="inner reveal">
+    <p class="eyebrow">Como funciona hoje</p>
+    <h2>Fluxo atual</h2>
+    <div class="flowhead">
+      <p class="legend">Barra inferior = quem está na frente do cliente</p>
+    </div>
+
+    <div class="flowwrap">
+      <div class="flow">
+        <div class="step">
+          <div class="step__body">
+            <span class="stepno">01</span>
+            <h4>Venda fechada</h4>
+            <p>Vendas fecha e o contrato é assinado.</p>
+          </div>
+          <div class="step__front front--sales">Vendas</div>
+        </div>
+        <div class="step">
+          <div class="step__body">
+            <span class="stepno">02</span>
+            <h4>Handover para o suporte</h4>
+            <p>Vendas passa o handover para a Julia.</p>
+          </div>
+          <div class="step__front front--none">Ninguém</div>
+        </div>
+        <div class="step">
+          <div class="step__body">
+            <span class="stepno">03</span>
+            <h4>Contato inicial</h4>
+            <p>Julia abre a conversa com o stakeholder e faz todo o atendimento inicial.</p>
+          </div>
+          <div class="step__front front--support">Julia</div>
+        </div>
+        <div class="step">
+          <div class="step__body">
+            <span class="stepno">04</span>
+            <h4>Grupos e agenda</h4>
+            <p>Julia cria os grupos e marca as reuniões com o cliente.</p>
+          </div>
+          <div class="step__front front--support">Julia</div>
+        </div>
+        <div class="step">
+          <div class="step__body">
+            <span class="stepno">05</span>
+            <h4>Acionamento do coordenador</h4>
+            <p>Julia pergunta quem vai atender, recebe o time e coloca todo mundo no grupo.</p>
+          </div>
+          <div class="step__front front--support">Julia</div>
+        </div>
+        <div class="step">
+          <div class="step__body">
+            <span class="stepno">06</span>
+            <h4>Kickoff</h4>
+            <p>Coordenador e time entram na relação — já formada.</p>
+          </div>
+          <div class="step__front front--coord">Coordenador</div>
+        </div>
+        <div class="step">
+          <div class="step__body">
+            <span class="stepno">07</span>
+            <h4>Planejamento</h4>
+            <p>O time entrega o plano e a operação começa.</p>
+          </div>
+          <div class="step__front front--coord">Coordenador</div>
+        </div>
+      </div>
+    </div>
+    <p class="flownote">O coordenador entra na etapa 06 de 07.</p>
+    <p class="takeaway">Quando o coordenador chega, o cliente já escolheu com quem fala.</p>
+  </div>
+</section>
+
+<!-- ============ O GARGALO ============ -->
+<section class="band">
+  <div class="inner reveal">
+    <p class="eyebrow">O gargalo</p>
+    <div class="prose">
+      <h2>Três coisas quebram por causa dessa ordem.</h2>
+    </div>
+    <div class="cards cards--3">
+      <div class="card">
+        <span class="card__no">01</span>
+        <h3>A autoridade fica com quem não responde pelo resultado</h3>
+        <p>O cliente escala para a Julia porque foi ela quem abriu a porta. Ela não tem mandato para decidir sobre o projeto — mas é ela quem recebe a cobrança.</p>
+      </div>
+      <div class="card">
+        <span class="card__no">02</span>
+        <h3>O coordenador chega sem relação e sem contexto</h3>
+        <p>Ele entra no kickoff como convidado da conversa, não como dono dela. Recuperar essa posição depois custa semanas de relacionamento.</p>
+      </div>
+      <div class="card">
+        <span class="card__no">03</span>
+        <h3>O suporte vira gargalo</h3>
+        <p>Cada projeto novo puxa a Julia para dentro de assunto que não é dela. O tempo dela sai do suporte e vai para tradução de projeto.</p>
+      </div>
+    </div>
+    <p class="takeaway">O custo não aparece no onboarding. Aparece no terceiro mês.</p>
+  </div>
+</section>
+
+<!-- ============ EVIDÊNCIA ============ -->
+<section class="band band--tint">
+  <div class="inner reveal">
+    <p class="eyebrow">Onde isso já aconteceu</p>
+    <div class="prose">
+      <h2>Não é hipótese.</h2>
+      <p>Três contas em que o cliente passou a escalar direto para a Julia em assunto de projeto, e o coordenador precisou reconquistar a interlocução depois do vínculo já formado.</p>
+    </div>
+
+    <div class="clients">
+      <div class="client">A.dias</div>
+      <div class="client">Viagem dos Sonhos</div>
+      <div class="client">Mega Empório 100</div>
+    </div>
+
+    <dl class="evidence">
+      <div>
+        <dt>Fato</dt>
+        <dd>Nos três projetos, o cliente escalou assunto de projeto direto para o suporte, e não para o coordenador responsável.</dd>
+      </div>
+      <div>
+        <dt>Interpretação</dt>
+        <dd>O que os três têm em comum não é o segmento nem o time alocado. É a ordem do primeiro contato — em todos, quem abriu a relação foi o suporte.</dd>
+      </div>
+    </dl>
+    <p class="takeaway">Três casos, um mesmo mecanismo.</p>
+  </div>
+</section>
+
+<!-- ============ VIRADA ============ -->
+<section class="band band--dark">
+  <div class="inner reveal">
+    <p class="eyebrow">A proposta</p>
+    <h1>Muda a ordem.<br>Não muda o time.</h1>
+    <p class="cover__lede">Ninguém sai do processo e nenhuma etapa é eliminada. O que muda é <b>quem fala primeiro</b> — e tudo o mais decorre disso.</p>
+  </div>
+</section>
+
+<!-- ============ FLUXO NOVO ============ -->
+<section class="band">
+  <div class="inner reveal">
+    <p class="eyebrow">Como passa a funcionar</p>
+    <h2>Fluxo proposto</h2>
+    <div class="flowhead">
+      <p class="legend">Barra inferior = quem está na frente do cliente</p>
+    </div>
+
+    <div class="flowwrap">
+      <div class="flow">
+        <div class="step">
+          <div class="step__body">
+            <span class="stepno">01</span>
+            <h4>Venda fechada</h4>
+            <p>Vendas fecha e o contrato é assinado.</p>
+          </div>
+          <div class="step__front front--sales">Vendas</div>
+        </div>
+        <div class="step">
+          <div class="step__body">
+            <span class="stepno">02</span>
+            <h4>Formulário de handover</h4>
+            <p>Vendas responde o formulário padrão. Sem formulário preenchido, o projeto não abre.</p>
+          </div>
+          <div class="step__front front--sales">Vendas</div>
+        </div>
+        <div class="step">
+          <div class="step__body">
+            <span class="stepno">03</span>
+            <h4>Primeiro contato</h4>
+            <p>O coordenador procura o stakeholder. É a primeira voz que o cliente ouve depois da venda.</p>
+          </div>
+          <div class="step__front front--coord">Coordenador</div>
+        </div>
+        <div class="step">
+          <div class="step__body">
+            <span class="stepno">04</span>
+            <h4>Growth Class</h4>
+            <p>Coordenador conduz, Julia participa. A reunião sai com a data do kickoff já marcada.</p>
+          </div>
+          <div class="step__front front--coord">Coordenador</div>
+        </div>
+        <div class="step">
+          <div class="step__body">
+            <span class="stepno">05</span>
+            <h4>Kickoff</h4>
+            <p>Coordenador e time alocado. A Julia já não precisa participar.</p>
+          </div>
+          <div class="step__front front--coord">Coordenador</div>
+        </div>
+        <div class="step">
+          <div class="step__body">
+            <span class="stepno">06</span>
+            <h4>Planejamento</h4>
+            <p>O time entrega o plano e a operação começa.</p>
+          </div>
+          <div class="step__front front--coord">Coordenador</div>
+        </div>
+      </div>
+    </div>
+    <p class="flownote">O coordenador entra na etapa 03 de 06.</p>
+    <p class="takeaway">O cliente não troca de interlocutor no meio do onboarding.</p>
+  </div>
+</section>
+
+<!-- ============ O QUE MUDA ============ -->
+<section class="band band--tint">
+  <div class="inner reveal">
+    <p class="eyebrow">O que muda de verdade</p>
+    <div class="prose">
+      <h2>Três mudanças. A primeira sustenta as outras duas.</h2>
+    </div>
+    <div class="cards cards--3">
+      <div class="card">
+        <span class="card__no">01</span>
+        <h3>O primeiro contato muda de dono</h3>
+        <p>Sai da Julia, vai para o coordenador. É a única mudança estrutural — as outras duas são consequência dela.</p>
+      </div>
+      <div class="card">
+        <span class="card__no">02</span>
+        <h3>A data do kickoff sai da Growth Class</h3>
+        <p>Como o coordenador está na sala, ele marca ali mesmo. O cliente sai da primeira reunião com data, não com promessa — e é isso que baixa a ansiedade dos primeiros dias.</p>
+      </div>
+      <div class="card">
+        <span class="card__no">03</span>
+        <h3>A Julia volta para o suporte</h3>
+        <p>Ela continua na Growth Class, para receber o contexto de que precisa. Sai do kickoff e sai da linha de frente do projeto.</p>
+      </div>
+    </div>
+    <p class="takeaway">Menos passagem de bastão, mais tempo de suporte de volta.</p>
+  </div>
+</section>
+
+<!-- ============ MATRIZ ============ -->
+<section class="band">
+  <div class="inner reveal">
+    <p class="eyebrow">Quem faz o quê</p>
+    <div class="prose">
+      <h2>Matriz de responsáveis</h2>
+      <p>Ninguém perde escopo. O suporte troca a linha de frente pela retaguarda, que é onde ele rende.</p>
+    </div>
+
+    <div class="tablewrap">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Etapa</th>
+            <th scope="col">Conduz</th>
+            <th scope="col">Participa</th>
+            <th scope="col">Não participa</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Venda e assinatura</td>
+            <td><span class="tag tag--lead">Vendas</span></td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>Formulário de handover</td>
+            <td><span class="tag tag--lead">Vendas</span></td>
+            <td><span class="tag">Coordenador recebe</span></td>
+            <td><span class="tag tag--out">Julia</span></td>
+          </tr>
+          <tr>
+            <td>Primeiro contato com o stakeholder</td>
+            <td><span class="tag tag--lead">Coordenador</span></td>
+            <td>—</td>
+            <td><span class="tag tag--out">Julia</span></td>
+          </tr>
+          <tr>
+            <td>Growth Class</td>
+            <td><span class="tag tag--lead">Coordenador</span></td>
+            <td><span class="tag">Julia</span> <span class="tag">Stakeholder</span></td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>Grupos, acessos e agenda</td>
+            <td><span class="tag tag--lead">Julia</span></td>
+            <td><span class="tag">Coordenador</span></td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>Definição do time alocado</td>
+            <td><span class="tag tag--lead">Coordenador</span></td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>Kickoff</td>
+            <td><span class="tag tag--lead">Coordenador</span></td>
+            <td><span class="tag">Time alocado</span></td>
+            <td><span class="tag tag--out">Julia</span></td>
+          </tr>
+          <tr>
+            <td>Planejamento</td>
+            <td><span class="tag tag--lead">Coordenador</span></td>
+            <td><span class="tag">Time alocado</span></td>
+            <td><span class="tag tag--out">Julia</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="takeaway">Uma etapa, um dono. Sem interlocução dividida.</p>
+  </div>
+</section>
+
+<!-- ============ FORMULÁRIO ============ -->
+<section class="band band--tint">
+  <div class="inner reveal">
+    <p class="eyebrow">O que destrava o fluxo novo</p>
+    <div class="prose">
+      <h2>Formulário de handover</h2>
+      <p>O coordenador só consegue fazer o primeiro contato bem-feito se receber o contexto junto com o projeto. Este formulário é o que substitui a tradução que hoje a Julia faz no meio do caminho — e é a peça que torna o resto possível.</p>
+      <p><strong>Proposta inicial, para vocês revisarem.</strong></p>
+    </div>
+
+    <div class="blocks">
+      <div class="block">
+        <h3><em>A</em> Quem é o cliente</h3>
+        <ul>
+          <li><b>Razão social e nome fantasia</b></li>
+          <li><b>Stakeholder principal</b> — nome, cargo, telefone e e-mail</li>
+          <li>Quem mais decide e precisa estar no grupo</li>
+          <li>Melhor canal e horário para o primeiro contato</li>
+        </ul>
+      </div>
+      <div class="block">
+        <h3><em>B</em> O que foi vendido</h3>
+        <ul>
+          <li>Escopo contratado, valor e vigência</li>
+          <li>Data da assinatura</li>
+          <li><b>O que foi prometido em reunião e não está no contrato</b></li>
+          <li>Qual prazo ou resultado o cliente verbalizou esperar</li>
+        </ul>
+      </div>
+      <div class="block">
+        <h3><em>C</em> Situação atual</h3>
+        <ul>
+          <li>Faturamento atual e meta declarada</li>
+          <li>Canais que já roda e verba mensal</li>
+          <li>Acessos que já existem — Meta, Google Ads, GA4, CRM, site</li>
+          <li>Quem opera hoje: time interno, outra agência ou ninguém</li>
+        </ul>
+      </div>
+      <div class="block">
+        <h3><em>D</em> Risco e temperatura</h3>
+        <ul>
+          <li>Já teve agência antes? Por que saiu?</li>
+          <li><b>Alguma objeção ficou em aberto na venda?</b></li>
+          <li>Nível de urgência do cliente</li>
+          <li>Sazonalidade ou data que trave o início</li>
+        </ul>
+      </div>
+    </div>
+    <p class="takeaway">Sem formulário preenchido, o projeto não abre.</p>
+  </div>
+</section>
+
+<!-- ============ PRAZOS ============ -->
+<section class="band">
+  <div class="inner reveal">
+    <p class="eyebrow">Compromisso de prazo</p>
+    <div class="prose">
+      <h2>Do contrato ao plano em até 16 dias</h2>
+      <p>Contados a partir da assinatura. São os prazos que o coordenador assume ao virar dono do primeiro contato.</p>
+    </div>
+
+    <div class="timeline">
+      <div class="tl">
+        <span class="tl__when">Até D+1</span>
+        <h4>Primeiro contato</h4>
+        <p>Coordenador procura o stakeholder em até 1 dia após a assinatura.</p>
+      </div>
+      <div class="tl">
+        <span class="tl__when">D+2 a D+3</span>
+        <h4>Growth Class</h4>
+        <p>De 1 a 2 dias após o primeiro contato. Sai com a data do kickoff.</p>
+      </div>
+      <div class="tl">
+        <span class="tl__when">D+4 a D+6</span>
+        <h4>Kickoff</h4>
+        <p>De 2 a 3 dias após a Growth Class.</p>
+      </div>
+      <div class="tl">
+        <span class="tl__when">D+11 a D+16</span>
+        <h4>Planejamento</h4>
+        <p>De 7 a 10 dias após o kickoff.</p>
+      </div>
+    </div>
+    <p class="takeaway">O prazo deixa de ser expectativa e vira compromisso.</p>
+  </div>
+</section>
+
+<!-- ============ IMPLEMENTAÇÃO ============ -->
+<section class="band band--tint">
+  <div class="inner reveal">
+    <p class="eyebrow">Como colocar de pé</p>
+    <div class="prose">
+      <h2>Plano de implementação</h2>
+      <p>Contado a partir da aprovação nesta reunião. Nada aqui depende de ferramenta nova ou de contratação.</p>
+    </div>
+
+    <div class="phases">
+      <div class="phase">
+        <div class="phase__when">Semana 1</div>
+        <div>
+          <h4>Formulário no ar</h4>
+          <p>Definir os campos obrigatórios, publicar o formulário e travar a abertura de projeto sem ele preenchido.</p>
+        </div>
+        <div class="phase__who">Vendas + Coordenação</div>
+      </div>
+      <div class="phase">
+        <div class="phase__when">Semana 1</div>
+        <div>
+          <h4>Nova fronteira do suporte</h4>
+          <p>Alinhar com a Julia o que continua com ela e o que passa a ser devolvido ao coordenador. Sem essa conversa, o fluxo volta sozinho para o modelo antigo.</p>
+        </div>
+        <div class="phase__who">Liderança + Julia</div>
+      </div>
+      <div class="phase">
+        <div class="phase__when">Semana 2</div>
+        <div>
+          <h4>Roteiro do primeiro contato e da Growth Class</h4>
+          <p>Um roteiro único para todos os coordenadores, com a data do kickoff como item obrigatório da pauta da Growth Class.</p>
+        </div>
+        <div class="phase__who">Coordenação</div>
+      </div>
+      <div class="phase">
+        <div class="phase__when">Próximo contrato</div>
+        <div>
+          <h4>Virada</h4>
+          <p>O próximo cliente assinado já roda o fluxo novo inteiro. Sem piloto em paralelo — o fluxo antigo sai no mesmo dia.</p>
+        </div>
+        <div class="phase__who">Todos</div>
+      </div>
+      <div class="phase">
+        <div class="phase__when">Após 3 clientes</div>
+        <div>
+          <h4>Revisão</h4>
+          <p>Rodada de ajuste com coordenadores, vendas e suporte sobre o que travou na prática.</p>
+        </div>
+        <div class="phase__who">Liderança</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ O PEDIDO ============ -->
+<section class="band band--dark">
+  <div class="inner reveal">
+    <p class="eyebrow">O pedido</p>
+    <h2>Preciso de três decisões hoje.</h2>
+    <p class="cover__lede">Com as três, o fluxo novo vale a partir do próximo contrato assinado.</p>
+
+    <div class="ask">
+      <div>
+        <span class="ask__no">01</span>
+        <h3>Aprovar o novo desenho</h3>
+        <p>O coordenador passa a ser o primeiro contato do cliente, e a Julia sai da linha de frente do projeto.</p>
+      </div>
+      <div>
+        <span class="ask__no">02</span>
+        <h3>Autorizar a trava do formulário</h3>
+        <p>Nenhum projeto abre sem o formulário de handover preenchido por vendas.</p>
+      </div>
+      <div>
+        <span class="ask__no">03</span>
+        <h3>Assumir os prazos</h3>
+        <p>D+1 para o primeiro contato e até D+16 para o planejamento entregue, como compromisso da coordenação.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+(function(){
+  var bar=document.getElementById('progress');
+  var ticking=false;
+  function update(){
+    var h=document.documentElement.scrollHeight-window.innerHeight;
+    var p=h>0?Math.min(window.scrollY/h,1):0;
+    bar.style.transform='scaleX('+p+')';
+    ticking=false;
+  }
+  window.addEventListener('scroll',function(){
+    if(!ticking){window.requestAnimationFrame(update);ticking=true;}
+  },{passive:true});
+  update();
+
+  var reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var items=document.querySelectorAll('.reveal');
+  if(reduce||!('IntersectionObserver' in window)){
+    items.forEach(function(el){el.classList.add('is-in');});
+    return;
+  }
+  var io=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){e.target.classList.add('is-in');io.unobserve(e.target);}
+    });
+  },{rootMargin:'0px 0px -12% 0px',threshold:0.08});
+  items.forEach(function(el){io.observe(el);});
+})();
+</script>
+
+</body>
+</html>
