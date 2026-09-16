@@ -496,21 +496,23 @@ Não altere arquivos que não sejam necessários para a tarefa.
 
 # 12. GITHUB COMO FONTE CENTRAL
 
-O GitHub deve ser tratado como a fonte oficial de armazenamento dos projetos.
+**O GitHub é o destino padrão de tudo.** Não pergunte se deve salvar localmente. Salve no repositório.
 
-Cada projeto deve possuir seu próprio repositório quando fizer sentido.
+Qualquer entrega que precise persistir — documento, análise, plano, código, configuração — vai para o repositório correto no GitHub via commit e push.
 
-Informações relevantes do projeto devem ser salvas no repositório correspondente.
+Não ofereça "salvar localmente" como opção. Não pergunte "quer que eu salve no computador?". A resposta padrão é sempre GitHub.
 
-Não mantenha informações importantes exclusivamente no computador local quando elas puderem ser armazenadas no GitHub.
+Exceções que justificam armazenamento local temporário:
+- arquivo de rascunho que ainda será refinado antes de ir ao repo;
+- dado sensível que não deve entrar no controle de versão (segredo, `.env`).
 
-Antes de criar um novo arquivo:
+Antes de criar um novo arquivo no repositório:
 
 1. Verifique a estrutura existente.
 2. Procure um arquivo que já tenha aquela finalidade.
 3. Só crie um novo arquivo se isso fizer sentido para a organização do projeto.
 
-O objetivo é manter os repositórios organizados, compreensíveis e utilizáveis mesmo sem o computador local.
+O objetivo é manter os repositórios organizados, compreensíveis e utilizáveis mesmo sem acesso ao computador local.
 
 ---
 
