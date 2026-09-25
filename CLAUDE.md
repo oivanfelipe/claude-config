@@ -114,6 +114,17 @@ Skills se combinam. O caso normal é duas: uma define **o que** entregar, outra 
 | Tirar cara de texto gerado por IA | `humanizer` |
 | Configurar hooks, permissões, settings.json | `update-config` |
 | Dúvida sobre a API da Anthropic, modelos, preço | `claude-api` |
+| Inspeção técnica de site no navegador real — console, network, performance, DOM, Core Web Vitals | `chrome-devtools`, combinada com a skill de domínio da análise |
+
+### Chrome DevTools combinada com análise de site
+
+Toda tarefa que analisa um site ao vivo combina a skill de domínio com `chrome-devtools`, não apenas uma das duas.
+
+Vale para `doutor-carvalho`, `scope-auditor`, `seo-audit`, `cro`, `ai-seo`, `schema`, `analytics` e `argus` sempre que o alvo é um site publicado, não apenas dados já coletados.
+
+A skill de domínio define o que investigar e como estruturar o resultado. `chrome-devtools` fornece a evidência real do navegador — console, requisições de rede, performance, DOM renderizado — em vez de inferir a partir do HTML estático ou de suposições.
+
+Não é preciso o usuário pedir "usa o Chrome DevTools". Se a tarefa é analisar um site, o padrão é este, contanto que a skill esteja disponível na sessão.
 
 Os nomes vêm de três origens: o repositório de skills globais (`~/.agents/skills`), a conta claude.ai e as skills embutidas do Claude Code. Nem toda sessão carrega as três.
 
