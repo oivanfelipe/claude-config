@@ -114,6 +114,19 @@ Skills se combinam. O caso normal é duas: uma define **o que** entregar, outra 
 | Tirar cara de texto gerado por IA | `humanizer` |
 | Configurar hooks, permissões, settings.json | `update-config` |
 | Dúvida sobre a API da Anthropic, modelos, preço | `claude-api` |
+| Inspeção técnica de site no navegador real — console, network, performance, DOM, Core Web Vitals | ferramentas MCP do `chrome-devtools-mcp`, combinadas com a skill de domínio da análise |
+
+### chrome-devtools-mcp combinado com análise de site
+
+`chrome-devtools-mcp` (github.com/ChromeDevTools/chrome-devtools-mcp) é um servidor MCP, não uma skill — não existe um SKILL.md para carregar. Quando estiver conectado na sessão, ele expõe ferramentas (prefixo `mcp__chrome-devtools__...`) que controlam um Chrome real: navegação, console, requisições de rede, screenshots e traces de performance.
+
+Toda tarefa que analisa um site ao vivo combina a skill de domínio com essas ferramentas, não apenas uma das duas.
+
+Vale para `doutor-carvalho`, `scope-auditor`, `seo-audit`, `cro`, `ai-seo`, `schema`, `analytics` e `argus` sempre que o alvo é um site publicado, não apenas dados já coletados.
+
+A skill de domínio define o que investigar e como estruturar o resultado. `chrome-devtools-mcp` fornece a evidência real do navegador — console, requisições de rede, performance, DOM renderizado — em vez de inferir a partir do HTML estático ou de suposições.
+
+Não é preciso o usuário pedir "usa o Chrome DevTools". Se a tarefa é analisar um site e o servidor MCP estiver disponível na sessão, o padrão é este. Se não estiver conectado, informe em uma linha e siga só com a skill de domínio.
 
 Os nomes vêm de três origens: o repositório de skills globais (`~/.agents/skills`), a conta claude.ai e as skills embutidas do Claude Code. Nem toda sessão carrega as três.
 
