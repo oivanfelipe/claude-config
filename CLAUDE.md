@@ -105,6 +105,7 @@ Skills se combinam. O caso normal é duas: uma define **o que** entregar, outra 
 | Otimização para busca por IA, citação em LLM | `ai-seo` |
 | Revisão de código em busca de bug | `code-review` |
 | Limpeza de código já escrito, simplificação | `simplify` |
+| Criar app, MVP ou produto digital (antes de qualquer código ou prompt de app builder) | `vibecode-blueprint` |
 | Plano de implementação faseado | `make-plan`, depois `do` |
 | Entender codebase novo | `learn-codebase`, `smart-explore`, `pathfinder` |
 | Deploy na Vercel | `deploy-to-vercel` |
